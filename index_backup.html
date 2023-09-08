@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="main.css" />
+        <title>Timer</title>
+    </head>
+    <body>
+        <div class="left-shift">
+            <h1>Welcome to Timer Mania</h1>
+
+            <br />
+            <br />
+            <div>
+                <p>Enter In Time</p>
+                <input class="time" id="startTime" type="time" />
+            </div>
+            <div>
+                <p>Shift Hours is taken as 8:30 hours.</p>
+                <input id="defaultHours" type="text" value="8" />
+                <input id="defaultMinutes" type="text" value="30" />
+            </div>
+            <div>
+                <p id="result"></p>
+            </div>
+        </div>
+    </body>
+    <script src="moment.js"></script>
+    <script>
+        const startTimeElement = document.getElementById("startTime");
+        const resElement = document.getElementById("result");
+        const defaultHoursEle = document.getElementById("defaultHours");
+        const defaultMinutesEle = document.getElementById("defaultMinutes");
+
+        startTimeElement.value = "09:30";
+
+        startTimeElement.addEventListener("change", checkTime);
+
+        function checkTime() {
+            resElement.textContent = "";
+            let time = startTimeElement.value;
+
+            console.log("🚀 ~ file: index.html:37 ~ checkTime ~ time:", time);
+            // time = "10:30";
+
+            if (time) {
+                const defaultHours = defaultHoursEle.value || 8;
+                const defaultMinutes = defaultMinutesEle.value || 8;
+
+                const end = moment(time, "H:mm").add(defaultHours, "h").add(defaultMinutes, "m");
+
+                console.log("🚀 ~ file: index.html:42 ~ checkTime ~ end:", end.toString());
+
+                const difference = end.diff(moment(), "minutes");
+
+                if (difference > 0) {
+                    const { hours: remainingHours, minutes: remainingMinutes } = converToHrsMinutes(difference);
+
+                    resElement.textContent =
+                        "Time Remaning ====> " + remainingHours + "hours" + remainingMinutes + "minutes";
+                } else {
+                    const { hours: remainingHours, minutes: remainingMinutes } = converToHrsMinutes(-difference);
+                    resElement.textContent =
+                        "Go Home NOW, Already you are in office for " +
+                        remainingHours +
+                        "hours" +
+                        remainingMinutes +
+                        "minutes" +
+                        " minutes more than you should be.";
+                }
+            }
+        }
+
+        function converToHrsMinutes(totalMinutes) {
+            var hours = Math.floor(totalMinutes / 60);
+            var minutes = totalMinutes % 60;
+
+            return {
+                hours,
+                minutes,
+            };
+        }
+    </script>
+</html>
