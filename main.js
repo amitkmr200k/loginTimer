@@ -1,10 +1,15 @@
-let intervalCheck;
+let notPassedInterval;
+let passedInterval;
 
 const loginTimeEle = document.getElementById("loginTime");
 const shiftHourEle = document.getElementById("shiftHour");
 const shiftMinutesEle = document.getElementById("shiftMinute");
 const countdownTimerEle = document.getElementById("countdownTimer");
 const resetEle = document.getElementById("reset");
+const loginTimeFormattedEle = document.getElementById("loginTimeFormatted");
+const logoutTimeFormattedEle = document.getElementById("logoutTimeFormatted");
+const pendingEle = document.getElementById("pending");
+const doneEle = document.getElementById("passedTimeMsg");
 
 loginTimeEle.addEventListener("click", checkTime);
 loginTimeEle.addEventListener("change", checkTime);
@@ -18,53 +23,76 @@ function checkTime() {
 
     if (loginTime) {
         const shiftHour = shiftHourEle.value || 8;
-        const shifttMinute = shiftMinutesEle.value || 30;
+        const shiftMinute = shiftMinutesEle.value || 30;
 
-        const end = moment(loginTime, "H:mm").add(shiftHour, "h").add(shifttMinute, "m");
+        const login = moment(loginTime, "H:mm");
+        const end = moment(loginTime, "H:mm").add(shiftHour, "h").add(shiftMinute, "m");
+
+        loginTimeFormattedEle.value = login.format("YYYY-MM-DD hh:mm A");
+        logoutTimeFormattedEle.value = end.format("YYYY-MM-DD hh:mm A");
 
         let differenceSeconds = end.diff(moment(), "seconds");
-
-        // differenceSeconds = differenceSeconds > 0 ? differenceSeconds : -differenceSeconds;
-
         let isPassed = false;
 
         if (differenceSeconds < 0) {
-            differenceSeconds = -differenceSeconds;
             isPassed = true;
         }
 
-        const { hours, minutes, seconds } = secondsToHms(differenceSeconds);
-        if (!isPassed) {
-            countdownTimerEle.textContent =
-                "Time Remaning " + hours + " hours " + minutes + " minutes " + seconds + " seconds";
+        if (isPassed) {
+            startPassedInterval(differenceSeconds);
         } else {
-            countdownTimerEle.textContent =
-                "Time Passed " + hours + " hours " + minutes + " minutes " + seconds + " seconds ago.";
-        }
-
-        intervalCheck = setInterval(() => {
-            if (differenceSeconds < 0) {
-                differenceSeconds = -differenceSeconds;
-                isPassed = true;
-            }
-
-            differenceSeconds -= 1;
-
             const { hours, minutes, seconds } = secondsToHms(differenceSeconds);
 
-            if (!isPassed) {
-                countdownTimerEle.textContent =
-                    "Time Remaning " + hours + " hours " + minutes + " minutes " + seconds + " seconds";
-            } else {
-                countdownTimerEle.textContent =
-                "Time Passed " + hours + " hours " + minutes + " minutes " + seconds + " seconds ago.";
-            }
-        }, 1000);
+            pendingEle.classList.add("show");
+            pendingEle.innerText = "Time Remaning " + hours + " hours " + minutes + " minutes " + seconds + " seconds";
 
-        if (isPassed) {
-            countdownTimerEle.style.color = "red";
+            startNotPassedInterval(differenceSeconds);
         }
     }
+}
+
+function startNotPassedInterval(timer) {
+    doneEle.style.display = "none";
+    pendingEle.style.display = "block";
+    pendingEle.classList.add("show");
+
+    notPassedInterval = setInterval(() => {
+        if (timer <= 0) {
+            clearInterval(notPassedInterval);
+            notPassedInterval = undefined;
+
+            startPassedInterval(1);
+        } else {
+            timer -= 1;
+
+            const { hours, minutes, seconds } = secondsToHms(timer);
+
+            pendingEle.innerText = "Time Remaning " + hours + " hours " + minutes + " minutes " + seconds + " seconds";
+        }
+    }, 1000);
+}
+
+function startPassedInterval(timer) {
+    pendingEle.style.display = "none";
+    doneEle.style.display = "block";
+    doneEle.classList.add("show");
+
+    if (timer === 1) {
+        doneEle.innerText = "Time Passed " + 0 + " hours " + 0 + " minutes " + 1 + " seconds ago.";
+    }
+
+    if (timer < 0) {
+        timer = -timer;
+    }
+
+    passedInterval = setInterval(() => {
+        timer++;
+
+        const { hours, minutes, seconds } = secondsToHms(timer);
+
+        doneEle.classList.add("show");
+        doneEle.innerText = "Time Passed " + hours + " hours " + minutes + " minutes " + seconds + " seconds ago.";
+    }, 1000);
 }
 
 function secondsToHms(d) {
@@ -86,12 +114,18 @@ resetEle.addEventListener("click", () => {
 });
 
 function resetOnClick() {
-    countdownTimerEle.style.color = "black";
-    countdownTimerEle.textContent = "";
-    if (intervalCheck) {
-        clearInterval(intervalCheck);
-        intervalCheck = undefined;
+    if (notPassedInterval) {
+        clearInterval(notPassedInterval);
+        notPassedInterval = undefined;
     }
+
+    if (passedInterval) {
+        clearInterval(passedInterval);
+        passedInterval = undefined;
+    }
+
+    pendingEle.style.display = "none";
+    doneEle.style.display = "none";
 }
 
 function resetAll() {

@@ -29,6 +29,7 @@
                             min="1"
                             max="24"
                             value="8"
+                            tabindex="-1"
                         />
                     </div>
                     <div class="col">
@@ -41,6 +42,7 @@
                             min="0"
                             max="59"
                             value="30"
+                            tabindex="-1"
                         />
                     </div>
                 </div>
@@ -55,12 +57,16 @@
                 </div>
                 <div class="col"></div>
             </div>
-            <!-- <div class="mb-3">
-                <label for="time remaining" id="result" class="form-label"></label> <br />
-                <label for="time remaining" id="result1" class="form-label"></label>
-            </div> -->
             <div class="mb-3">
-                <label for="countdownTimer" id="countdownTimer" class="form-label"></label>
+                <br/>
+                <label for="loginTimeFormatted" class="form-label">Login Time</label> <br />
+                <input type="text" class="form-control" id="loginTimeFormatted" readonly/>
+                <label for="logoutTimeFormatted" class="form-label">Logout Time</label>
+                <input type="text" class="form-control" id="logoutTimeFormatted" readonly/>
+            </div>
+            <div class="alert alert-primary fade" role="alert" id="pending">
+            </div>
+            <div class="alert alert-danger fade" role="alert" id="passedTimeMsg">
             </div>
         </div>
         <script
