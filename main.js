@@ -4,7 +4,6 @@ let passedInterval;
 const loginTimeEle = document.getElementById("loginTime");
 const shiftHourEle = document.getElementById("shiftHour");
 const shiftMinutesEle = document.getElementById("shiftMinute");
-const countdownTimerEle = document.getElementById("countdownTimer");
 const resetEle = document.getElementById("reset");
 const loginTimeFormattedEle = document.getElementById("loginTimeFormatted");
 const logoutTimeFormattedEle = document.getElementById("logoutTimeFormatted");
