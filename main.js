@@ -9,14 +9,21 @@ const loginTimeFormattedEle = document.getElementById("loginTimeFormatted");
 const logoutTimeFormattedEle = document.getElementById("logoutTimeFormatted");
 const pendingEle = document.getElementById("pending");
 const doneEle = document.getElementById("passedTimeMsg");
+const parentDisplayEle = document.getElementById("parentDisplay");
 
 loginTimeEle.addEventListener("click", checkTime);
 loginTimeEle.addEventListener("change", checkTime);
+shiftHourEle.addEventListener("click", checkTime);
+shiftHourEle.addEventListener("change", checkTime);
+shiftMinutesEle.addEventListener("click", checkTime);
+shiftMinutesEle.addEventListener("change", checkTime);
 
 resetAll();
 
 function checkTime() {
-    resetOnClick();
+    localStorage.setItem("clickedByUser", true);
+
+    clearAllIntervals();
 
     const loginTime = loginTimeEle.value;
 
@@ -24,9 +31,14 @@ function checkTime() {
         const shiftHour = shiftHourEle.value || 8;
         const shiftMinute = shiftMinutesEle.value || 30;
 
+        localStorage.setItem("shiftHour", shiftHour);
+        localStorage.setItem("shiftMinute", shiftMinute);
+        localStorage.setItem("loginTime", loginTime);
+
         const login = moment(loginTime, "H:mm");
         const end = moment(loginTime, "H:mm").add(shiftHour, "h").add(shiftMinute, "m");
 
+        parentDisplayEle.style.display = "block";
         loginTimeFormattedEle.value = login.format("YYYY-MM-DD hh:mm A");
         logoutTimeFormattedEle.value = end.format("YYYY-MM-DD hh:mm A");
 
@@ -109,10 +121,11 @@ function secondsToHms(d) {
 }
 
 resetEle.addEventListener("click", () => {
+    localStorage.clear();
     resetAll();
 });
 
-function resetOnClick() {
+function clearAllIntervals() {
     if (notPassedInterval) {
         clearInterval(notPassedInterval);
         notPassedInterval = undefined;
@@ -122,13 +135,20 @@ function resetOnClick() {
         clearInterval(passedInterval);
         passedInterval = undefined;
     }
-
-    pendingEle.style.display = "none";
-    doneEle.style.display = "none";
 }
 
 function resetAll() {
-    loginTimeEle.value = "09:30";
+    loginTimeEle.value = localStorage.getItem("loginTime") || "09:30";
+    shiftHourEle.value = localStorage.getItem("shiftHour") || 8;
+    shiftMinutesEle.value = localStorage.getItem("shiftMinute") || 30;
 
-    resetOnClick();
+    if (localStorage.getItem("clickedByUser")) {
+        loginTimeEle.click();
+    } else {
+        parentDisplayEle.style.display = "none";
+        pendingEle.style.display = "none";
+        doneEle.style.display = "none";
+    }
+
+    clearAllIntervals();
 }
