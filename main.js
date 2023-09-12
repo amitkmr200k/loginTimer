@@ -85,10 +85,11 @@ function startNotPassedInterval(timer) {
 
 function startPassedInterval(timer) {
     pendingEle.style.display = "none";
-    doneEle.style.display = "block";
-    doneEle.classList.add("show");
 
     if (timer === 1) {
+        doneEle.style.display = "block";
+        doneEle.classList.add("show");
+    
         doneEle.innerText = "Time Passed " + 0 + " hours " + 0 + " minutes " + 1 + " seconds ago.";
     }
 
@@ -101,7 +102,9 @@ function startPassedInterval(timer) {
 
         const { hours, minutes, seconds } = secondsToHms(timer);
 
+        doneEle.style.display = "block";
         doneEle.classList.add("show");
+
         doneEle.innerText = "Time Passed " + hours + " hours " + minutes + " minutes " + seconds + " seconds ago.";
     }, 1000);
 }
