@@ -48,26 +48,33 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label for="loginTime" class="form-label">Enter Login Time</label>
-                <input type="time" class="form-control" id="loginTime" placeholder="name@example.com" />
+                <div class="row">
+                    <label for="loginTime" class="form-label">Enter Login Time</label>
+                    <div class="col d-grid">
+                        <button type="button" class="btn btn-primary" id="now">NOW</button>
+                    </div>
+                    <div class="col-1">
+                        <label class="form-label">OR</label>
+                    </div>
+                    <div class="col">
+                        <input type="time" class="form-control" id="loginTime" />
+                    </div>
+                </div>
             </div>
             <div class="mb-3">
-                <div class="col">
+                <div class="d-grid col-2">
                     <button type="button" id="reset" class="btn btn-danger">RESET</button>
                 </div>
-                <div class="col"></div>
             </div>
             <div class="mb-3" id="parentDisplay">
-                <br/>
+                <br />
                 <label for="loginTimeFormatted" class="form-label">Login Time</label> <br />
-                <input type="text" class="form-control" id="loginTimeFormatted" readonly/>
+                <input type="text" class="form-control" id="loginTimeFormatted" readonly />
                 <label for="logoutTimeFormatted" class="form-label">Logout Time</label>
-                <input type="text" class="form-control" id="logoutTimeFormatted" readonly/>
+                <input type="text" class="form-control" id="logoutTimeFormatted" readonly />
             </div>
-            <div class="alert alert-primary fade" role="alert" id="pending">
-            </div>
-            <div class="alert alert-danger fade" role="alert" id="passedTimeMsg">
-            </div>
+            <div class="alert alert-primary fade" role="alert" id="pending"></div>
+            <div class="alert alert-danger fade" role="alert" id="passedTimeMsg"></div>
         </div>
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
@@ -75,6 +82,6 @@
             crossorigin="anonymous"
         ></script>
         <script src="moment.js"></script>
-        <script src="main.js"></script>
+        <script src="main.js" defer></script>
     </body>
 </html>
